@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="bg-dark text-white py-5 shadow-lg" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1350&q=80'); background-size: cover; background-position: center;">
+    <div class="container py-5 text-center">
+        <h1 class="display-3 fw-bold mb-3">PT Kendali Data Digital</h1>
+        <p class="lead mb-4 fs-4">Transformasi Manajemen Kehadiran & Data Karyawan dalam Satu Genggaman.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-4 gap-3 shadow">Masuk ke Sistem</a>
+            <a href="#about" class="btn btn-outline-light btn-lg px-4">Pelajari Selengkapnya</a>
+        </div>
+    </div>
+</section>
+
+<div class="container mt-n5">
+    <div class="row g-4 text-center">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-3">
+                <div class="card-body">
+                    <h2 class="text-primary fw-bold">100%</h2>
+                    <p class="text-muted mb-0">Keamanan Data</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-3">
+                <div class="card-body">
+                    <h2 class="text-primary fw-bold">Real-Time</h2>
+                    <p class="text-muted mb-0">Monitoring Kehadiran</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-3">
+                <div class="card-body">
+                    <h2 class="text-primary fw-bold">Efisiensi</h2>
+                    <p class="text-muted mb-0">Manajemen Administrasi</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section id="services" class="container py-5 mt-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Layanan Kami</h2>
+        <div class="mx-auto bg-primary" style="height: 3px; width: 60px;"></div>
+    </div>
+    <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-person-badge fs-1 text-primary mb-3"></i>
+                    <h5 class="card-title fw-bold">Data Karyawan Terpusat</h5>
+                    <p class="card-text text-muted">Penyimpanan profil dan riwayat karyawan yang terorganisir dan mudah diakses oleh admin.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-clock-history fs-1 text-primary mb-3"></i>
+                    <h5 class="card-title fw-bold">Absensi Digital</h5>
+                    <p class="card-text text-muted">Sistem presensi yang akurat dengan pencatatan waktu otomatis untuk masuk dan pulang.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-12">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-journal-text fs-1 text-primary mb-3"></i>
+                    <h5 class="card-title fw-bold">Manajemen Izin & Cuti</h5>
+                    <p class="card-text text-muted">Proses pengajuan izin dan persetujuan yang transparan langsung melalui dashboard user.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about" class="bg-light py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0 text-center text-lg-start">
+                <h2 class="fw-bold">Siap Mengoptimalkan Performa Perusahaan?</h2>
+                <p class="text-muted">Bergabunglah dengan PT Kendali Data Digital untuk pengalaman manajemen HR yang lebih modern dan efisien.</p>
+            </div>
+            <div class="col-lg-6 text-center text-lg-end">
+                <a href="https://t.me/tangsr21" class="btn btn-outline-dark me-2">Hubungi Kami</a>
+                <a href="{% url 'login' %}" class="btn btn-primary">Mulai Sekarang</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

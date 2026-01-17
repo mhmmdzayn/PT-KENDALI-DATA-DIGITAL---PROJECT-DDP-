@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-5 mb-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Ajukan Izin Baru</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.leave_type.id_for_label }}" class="form-label">
+                            <i class="bi bi-tag"></i> Jenis Izin
+                        </label>
+                        {{ form.leave_type }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.start_date.id_for_label }}" class="form-label">
+                            <i class="bi bi-calendar"></i> Tanggal Mulai
+                        </label>
+                        {{ form.start_date }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.end_date.id_for_label }}" class="form-label">
+                            <i class="bi bi-calendar-check"></i> Tanggal Selesai
+                        </label>
+                        {{ form.end_date }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.reason.id_for_label }}" class="form-label">
+                            <i class="bi bi-chat-left-text"></i> Alasan
+                        </label>
+                        {{ form.reason }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.attachment.id_for_label }}" class="form-label">
+                            <i class="bi bi-paperclip"></i> Lampiran (Opsional)
+                        </label>
+                        {{ form.attachment }}
+                        <small class="form-text text-muted">Upload surat dokter, undangan, dll.</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-send"></i> Kirim Permohonan
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-list-ul"></i> Riwayat Permohonan Izin</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Jenis</th>
+                                <th>Tanggal</th>
+                                <th>Durasi</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for leave in my_leaves %}
+                            <tr>
+                                <td>
+                                    <strong>{{ leave.get_leave_type_display }}</strong>
+                                </td>
+                                <td>
+                                    {{ leave.start_date|date:"d M" }} - {{ leave.end_date|date:"d M Y" }}
+                                </td>
+                                <td>{{ leave.duration_days }} hari</td>
+                                <td>
+                                    {% if leave.status == 'pending' %}
+                                        <span class="badge bg-warning">Menunggu</span>
+                                    {% elif leave.status == 'approved' %}
+                                        <span class="badge bg-success">Disetujui</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Ditolak</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#detailModal{{ leave.id }}">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            
+                            <div class="modal fade" id="detailModal{{ leave.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Detail Permohonan Izin</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <dl class="row">
+                                                <dt class="col-sm-4">Jenis Izin:</dt>
+                                                <dd class="col-sm-8">{{ leave.get_leave_type_display }}</dd>
+                                                
+                                                <dt class="col-sm-4">Tanggal:</dt>
+                                                <dd class="col-sm-8">
+                                                    {{ leave.start_date|date:"d M Y" }} - {{ leave.end_date|date:"d M Y" }}
+                                                </dd>
+                                                
+                                                <dt class="col-sm-4">Durasi:</dt>
+                                                <dd class="col-sm-8">{{ leave.duration_days }} hari</dd>
+                                                
+                                                <dt class="col-sm-4">Alasan:</dt>
+                                                <dd class="col-sm-8">{{ leave.reason }}</dd>
+                                                
+                                                <dt class="col-sm-4">Status:</dt>
+                                                <dd class="col-sm-8">
+                                                    {% if leave.status == 'pending' %}
+                                                        <span class="badge bg-warning">Menunggu Persetujuan</span>
+                                                    {% elif leave.status == 'approved' %}
+                                                        <span class="badge bg-success">Disetujui</span>
+                                                    {% else %}
+                                                        <span class="badge bg-danger">Ditolak</span>
+                                                    {% endif %}
+                                                </dd>
+                                                
+                                                {% if leave.admin_notes %}
+                                                <dt class="col-sm-4">Catatan Admin:</dt>
+                                                <dd class="col-sm-8">{{ leave.admin_notes }}</dd>
+                                                {% endif %}
+                                                
+                                                <dt class="col-sm-4">Diajukan:</dt>
+                                                <dd class="col-sm-8">{{ leave.created_at|date:"d M Y H:i" }}</dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    Belum ada permohonan izin
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

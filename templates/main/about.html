@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-5 text-center container">
+    <div class="row py-lg-5">
+        <div class="col-lg-8 col-md-8 mx-auto">
+            <h1 class="fw-bold display-4 text-primary">Tentang Project</h1>
+            <h2 class="h4 text-dark mb-4">PT Kendali Data Digital</h2>
+            <p class="lead text-muted text-start" style="text-align: justify !important;">
+                {{ project_description|linebreaksbr }}
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Fitur Unggulan</h2>
+            <div class="mx-auto bg-primary" style="height: 3px; width: 60px;"></div>
+        </div>
+        <div class="row g-4">
+            {% for feature in features %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <i class="bi {{ feature.icon }} fs-3"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">{{ feature.title }}</h5>
+                        <p class="card-text text-muted small">{{ feature.desc }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-8">
+        <h1 class="fw-bold">
+            <i class="bi bi-speedometer2"></i> Dashboard Admin
+        </h1>
+        <p class="text-muted">Panel kontrol manajemen karyawan</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'add_employee' %}" class="btn btn-success shadow">
+            <i class="bi bi-person-plus-fill"></i> Tambah Karyawan
+        </a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card" style="--card-color-start: #667eea; --card-color-end: #764ba2;">
+            <div class="stat-card">
+                <h3>{{ total_employees }}</h3>
+                <p><i class="bi bi-people"></i> Total Karyawan</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card" style="--card-color-start:  #667eea; --card-color-end: #764ba2;">
+            <div class="stat-card">
+                <h3>{{ present_today }}</h3>
+                <p><i class="bi bi-check-circle"></i> Hadir Hari Ini</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card" style="--card-color-start:  #667eea; --card-color-end: #764ba2;">
+            <div class="stat-card">
+                <h3>{{ absent_today }}</h3>
+                <p><i class="bi bi-x-circle"></i> Tidak Hadir</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card" style="--card-color-start:  #667eea; --card-color-end: #764ba2;">
+            <div class="stat-card">
+                <h3>{{ pending_leaves }}</h3>
+                <p><i class="bi bi-hourglass-split"></i> Izin Pending</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-people"></i> Karyawan Terbaru</h5>
+                <a href="{% url 'employee_list' %}" class="btn btn-sm btn-primary">
+                    Lihat Semua
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% for emp in recent_employees %}
+                    <a href="#" 
+                       class="list-group-item list-group-item-action">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                {% if emp.photo %}
+                                <img src="{{ emp.photo.url }}" 
+                                     class="rounded-circle" 
+                                     width="50" 
+                                     height="50"
+                                     style="object-fit: cover;">
+                                {% else %}
+                                <i class="bi bi-person-circle" style="font-size: 50px;"></i>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-0">{{ emp.full_name }}</h6>
+                                <small class="text-muted">
+                                    {{ emp.position }} - {{ emp.employee_id }}
+                                </small>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Kehadiran Terbaru</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Tanggal</th>
+                                <th>Check-In</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for att in recent_attendance %}
+                            <tr>
+                                <td>{{ att.employee.full_name }}</td>
+                                <td>{{ att.date|date:"d/m" }}</td>
+                                <td>{{ att.check_in|default:"-" }}</td>
+                                <td>
+                                    {% if att.status == 'present' %}
+                                        <span class="badge bg-success">Hadir</span>
+                                    {% elif att.status == 'late' %}
+                                        <span class="badge bg-warning">Terlambat</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">{{ att.get_status_display }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-warning text-white">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Permohonan Izin yang Perlu Diproses</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Nama Karyawan</th>
+                                <th>Jenis Izin</th>
+                                <th>Tanggal</th>
+                                <th>Durasi</th>
+                                <th>Alasan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for leave in leave_requests %}
+                            <tr>
+                                <td>
+                                    <strong>{{ leave.employee.full_name }}</strong><br>
+                                    <small class="text-muted">{{ leave.employee.employee_id }}</small>
+                                </td>
+                                <td>{{ leave.get_leave_type_display }}</td>
+                                <td>
+                                    {{ leave.start_date|date:"d M" }} - 
+                                    {{ leave.end_date|date:"d M Y" }}
+                                </td>
+                                <td>{{ leave.duration_days }} hari</td>
+                                <td>
+                                    <small>{{ leave.reason|truncatewords:10 }}</small>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'manage_leave' leave.id 'approve' %}" 
+                                           class="btn btn-sm btn-success"
+                                           onclick="return confirm('Setujui izin ini?')">
+                                            <i class="bi bi-check"></i>
+                                        </a>
+                                        <a href="{% url 'manage_leave' leave.id 'reject' %}" 
+                                           class="btn btn-sm btn-danger"
+                                           onclick="return confirm('Tolak izin ini?')">
+                                            <i class="bi bi-x"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    <i class="bi bi-check-circle" style="font-size: 3rem;"></i>
+                                    <p>Tidak ada permohonan izin yang perlu diproses</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="bi bi-cash-coin text-success" style="font-size: 3rem;"></i>
+                <h3 class="mt-3">Total Gaji Bulan Ini</h3>
+                <h2 class="text-success">Rp {{ total_salary|floatformat:0 }}</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="bi bi-graph-up text-primary" style="font-size: 3rem;"></i>
+                <h3 class="mt-3">Kehadiran Bulan Ini</h3>
+                <div class="row mt-3">
+                    <div class="col-4">
+                        <h4 class="text-success">{{ attendance_stats.present }}</h4>
+                        <small>Hadir</small>
+                    </div>
+                    <div class="col-4">
+                        <h4 class="text-warning">{{ attendance_stats.late }}</h4>
+                        <small>Terlambat</small>
+                    </div>
+                    <div class="col-4">
+                        <h4 class="text-danger">{{ attendance_stats.absent }}</h4>
+                        <small>Tidak Hadir</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

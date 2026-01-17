@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="bg-primary text-white py-5 mb-5">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-3">{{ title }}</h1>
+        <p class="lead mx-auto" style="max-width: 800px; opacity: 0.9;">
+            {{ website_description }}
+        </p>
+    </div>
+</section>
+
+<section id="team" class="container pb-5">
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4 justify-content-center">
+        {% for member in team_members %}
+        <div class="col">
+            <div class="card h-100 border-0 shadow-lg text-center position-relative overflow-hidden" style="border-radius: 15px;">
+                <div class="card-header bg-transparent border-0 pt-4 pb-0">
+                    <img src="{{ member.image }}" 
+                         class="rounded-circle shadow-sm border border-3 border-white" 
+                         alt="{{ member.name }}"
+                         style="width: 120px; height: 120px; object-fit: cover;">
+                </div>
+                <div class="card-body">
+                    <h6 class="fw-bold text-primary mb-1">{{ member.name }}</h6>
+                    <div class="badge bg-light text-dark border mb-2">
+                        <i class="bi bi-card-heading"></i> {{ member.nim }}
+                    </div>
+                    <p class="card-text small text-muted fst-italic">{{ member.role }}</p>
+                </div>
+                <div class="card-footer bg-light border-0 py-2">
+                    <small class="text-muted"><i class="bi bi-person-check-fill"></i> Active Member</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
